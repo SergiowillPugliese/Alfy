@@ -22,6 +22,7 @@ Prossima fase: **Fase 1 — Autenticazione e Famiglia**
 | Piano | Stato |
 |-------|-------|
 | [Fase 0 — Setup e Fondamenta (prototipo Expo)](./plans/2026-04-25-fase0-setup.md) | superato da ADR 0001 |
+| [Fase 0 (bis) — Migrazione ad Angular PWA](./plans/2026-10-14-fase0-angular-pwa.md) | in corso |
 
 ## Feature Completate
 
