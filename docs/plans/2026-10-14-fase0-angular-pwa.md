@@ -24,8 +24,9 @@ Sostituire il prototipo React Native + Expo con un'app Angular installabile come
 ## Passi
 
 - [x] Commit della documentazione (ADR 0001)
-- [ ] Rimuovere il prototipo Expo (commit dedicato) — **in attesa della conferma di Sergio**: la cancellazione è stata bloccata dai permessi di Claude Code
-- [ ] `ng new` in una cartella temporanea, poi spostamento nel repo (README esistente mantenuto, `.gitignore` unito) — commit con il solo codice generato
+- [x] Rimuovere il prototipo Expo (commit dedicato)
+- [x] `ng new` in una cartella temporanea, poi spostamento nel repo (README esistente mantenuto, `.gitignore` unito) — commit con il solo codice generato. La cartella `.vscode/` generata non è stata copiata.
+- [ ] Eliminare il vecchio `node_modules` di Expo e lanciare `npm install`
 - [ ] `ng add @angular/pwa` — commit separato
 - [ ] Client Supabase ed environments — commit
 - [ ] Schermata di benvenuto al posto del template di default
