@@ -1,5 +1,7 @@
 # Feature — Fase 0: Setup e Fondamenta
 
+> **Superato il 2026-10-14** dall'[ADR 0001](../adr/0001-angular-pwa-invece-di-react-native.md): il frontend passa ad Angular PWA. Questo documento descrive il prototipo Expo e resta come storico.
+
 ## Panoramica
 
 Setup iniziale del progetto Alfy: ambiente di sviluppo, navigazione, connessione a Supabase.

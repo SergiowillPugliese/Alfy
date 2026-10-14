@@ -15,7 +15,6 @@ erDiagram
     USER {
         uuid id PK
         string email
-        string password_hash
         string full_name
         string avatar_url
         string role
@@ -225,7 +224,7 @@ erDiagram
 ## Descrizione delle Entità
 
 ### USER
-Rappresenta ogni persona registrata su Alfy. Ogni utente appartiene a esattamente una famiglia. Il campo `role` può essere `admin` o `member`. Il campo `deleted_at` permette il soft delete dell'account mantenendo lo storico dei dati associati.
+Rappresenta ogni persona registrata su Alfy. Ogni utente appartiene a esattamente una famiglia. Il campo `role` può essere `admin` o `member`. Il campo `deleted_at` permette il soft delete dell'account mantenendo lo storico dei dati associati. Le credenziali sono gestite da Supabase Auth (tabella `auth.users`): qui ci sono solo i dati applicativi, l'`id` coincide con quello dell'utente Auth e la password non viene mai salvata.
 
 ### FAMILY
 Il nucleo familiare. Contiene un `invite_code` generato automaticamente per invitare nuovi membri. Un utente che si registra senza codice crea una nuova famiglia da solo.

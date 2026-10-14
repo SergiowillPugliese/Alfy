@@ -4,7 +4,7 @@ Un assistente personale AI-first per la gestione della vita quotidiana di singol
 
 ## Cos'è Alfy
 
-Alfy è un'app mobile dove l'interfaccia principale è una **conversazione in linguaggio naturale**. Invece di navigare menu e form, l'utente parla con Alfy come farebbe con un vero maggiordomo:
+Alfy è una web app installabile sul telefono (PWA) dove l'interfaccia principale è una **conversazione in linguaggio naturale**. Invece di navigare menu e form, l'utente parla con Alfy come farebbe con un vero maggiordomo:
 
 > "Ho speso 45 euro al supermercato oggi"
 > "Cosa ho in agenda questa settimana?"
@@ -27,8 +27,9 @@ Alfy interpreta la richiesta, esegue l'azione sul database tramite **tool use** 
 
 | Layer | Tecnologia |
 |-------|-----------|
-| Frontend | React Native + Expo (iOS, Android, Web) |
-| Navigazione | Expo Router (file-based routing) |
+| Frontend | Angular, distribuito come PWA |
+| Navigazione | Angular Router |
+| Notifiche | Web Push (service worker) |
 | Database | Supabase (PostgreSQL) |
 | Autenticazione | Supabase Auth |
 | Storage | Supabase Storage |
@@ -38,7 +39,9 @@ Alfy interpreta la richiesta, esegue l'azione sul database tramite **tool use** 
 
 ## Prerequisiti
 
-- [Node.js](https://nodejs.org/) v18+
+> **Migrazione in corso** ([ADR 0001](./docs/adr/0001-angular-pwa-invece-di-react-native.md)): il codice attuale è il prototipo React Native + Expo della Fase 0, in sostituzione con Angular. Prerequisiti, setup e struttura qui sotto descrivono ancora il prototipo e verranno aggiornati a migrazione completata.
+
+- [Node.js](https://nodejs.org/) v20.19.4+ (minimo richiesto da React Native 0.81)
 - [Expo Go](https://expo.dev/go) installato sul dispositivo mobile (per test su telefono)
 - Un account [Supabase](https://supabase.com/) con un progetto creato
 
@@ -46,19 +49,30 @@ Alfy interpreta la richiesta, esegue l'azione sul database tramite **tool use** 
 
 ```bash
 # Clona il repository
-git clone https://github.com/your-username/alfy.git
-cd alfy
+git clone https://github.com/SergiowillPugliese/Alfy.git
+cd Alfy
 
 # Installa le dipendenze
 npm install
 
 # Configura le variabili d'ambiente
 cp .env.example .env
-# Modifica .env con le tue chiavi Supabase
+# Modifica .env con le tue chiavi Supabase (vedi sotto)
 
 # Avvia il dev server
 npm start
 ```
+
+### Variabili d'ambiente
+
+| Variabile | Dove trovarla (dashboard Supabase) |
+|-----------|-------------------------------------|
+| `EXPO_PUBLIC_SUPABASE_URL` | Project Settings → Data API → Project URL |
+| `EXPO_PUBLIC_SUPABASE_KEY` | Project Settings → API Keys → **Publishable key** (`sb_publishable_...`) |
+
+> **Attenzione:** le variabili con prefisso `EXPO_PUBLIC_` vengono incluse nel bundle JavaScript dell'app, quindi chiunque abbia l'app può leggerle. Usa **solo** la publishable key. La secret key (`sb_secret_...`) o la vecchia `service_role` ignorano la Row Level Security e non devono mai finire nel client.
+
+Le variabili vengono lette all'avvio del dev server: dopo aver modificato `.env` riavvia `npm start`. Se i valori non si aggiornano, usa `npx expo start --clear`.
 
 Dopo l'avvio:
 - Premi `w` per aprire nel browser
@@ -92,10 +106,12 @@ La documentazione completa del progetto si trova nella cartella [`docs/`](./docs
 - [ERD](./docs/alfy-erd.md) — Entity Relationship Diagram
 - [Roadmap](./docs/alfy-roadmap.md) — Roadmap di sviluppo
 - [User Stories](./docs/alfy-user-stories.md) — User stories per feature
+- [Indice e decisioni architetturali (ADR)](./docs/index.md)
 
 ## Stato del progetto
 
-**Fase attuale:** 0 — Setup e Fondamenta
+**Fase in corso:** 0 — Setup e Fondamenta, riaperta per la migrazione del frontend ad Angular PWA
+**Prossima fase:** 1 — Autenticazione e Famiglia
 
 Vedi la [roadmap completa](./docs/alfy-roadmap.md) per i dettagli sulle fasi successive.
 

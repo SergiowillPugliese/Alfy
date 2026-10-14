@@ -1,10 +1,10 @@
 # Alfy — Documentazione Progetto
 
-**Ultimo aggiornamento:** 2026-04-25
+**Ultimo aggiornamento:** 2026-10-14
 
 ## Stato Progetto
 
-Fase completata: **Fase 0 — Setup e Fondamenta**
+Fase in corso: **Fase 0 — Setup e Fondamenta**, riaperta il 2026-10-14 per la migrazione del frontend ad Angular PWA ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md))
 Prossima fase: **Fase 1 — Autenticazione e Famiglia**
 
 ## Documenti di Riferimento
@@ -21,16 +21,16 @@ Prossima fase: **Fase 1 — Autenticazione e Famiglia**
 
 | Piano | Stato |
 |-------|-------|
-| [Fase 0 — Setup e Fondamenta](./plans/2026-04-25-fase0-setup.md) | completed |
+| [Fase 0 — Setup e Fondamenta (prototipo Expo)](./plans/2026-04-25-fase0-setup.md) | superato da ADR 0001 |
 
 ## Feature Completate
 
 | Feature | Descrizione |
 |---------|-------------|
-| [Fase 0 — Setup](./features/fase0-setup.md) | Expo Router, Supabase client, struttura progetto |
+| [Fase 0 — Setup (prototipo Expo)](./features/fase0-setup.md) | Expo Router, Supabase client, struttura progetto — superato da ADR 0001 |
 
 ## Architecture Decision Records
 
 | ADR | Stato |
 |-----|-------|
-| _Nessun ADR ancora._ | |
+| [0001 — Frontend Angular PWA invece di React Native + Expo](./adr/0001-angular-pwa-invece-di-react-native.md) | Accettato |

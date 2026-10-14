@@ -2,6 +2,7 @@
 
 **Versione:** 0.1 (Draft)
 **Data:** Marzo 2026
+**Ultimo aggiornamento:** 2026-10-14 — Fase 0 riaperta: frontend Angular PWA al posto di React Native + Expo ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md))
 **Autore:** Sergio
 **Stato:** In revisione
 
@@ -19,25 +20,30 @@
 ## Fase 0 — Setup e Fondamenta
 **Obiettivo:** avere un ambiente di sviluppo funzionante e un'app vuota che gira sul telefono.
 **Durata stimata:** 1-2 settimane
-**Tecnologie introdotte:** Expo, React Native, TypeScript, Supabase CLI, GitHub
+**Tecnologie introdotte:** Angular (PWA), TypeScript, Supabase, GitHub
+
+> **Riaperta il 2026-10-14:** il primo setup era in React Native + Expo. Il frontend passa ad Angular PWA ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md)).
 
 ### Attività
-- [ ] Creare repository GitHub con struttura monorepo (`alfy/`)
-- [ ] Inizializzare progetto Expo con TypeScript
-- [ ] Installare e configurare Supabase CLI in locale
-- [ ] Creare progetto Supabase (hosted)
-- [ ] Connettere l'app Expo a Supabase
-- [ ] Caricare tutta la documentazione nella cartella `docs/`
-- [ ] Scrivere il `README.md` iniziale del progetto
-- [ ] Installare Expo Go su iPhone e testare l'app sul dispositivo fisico
+- [x] Creare repository GitHub — struttura flat invece del monorepo previsto (vedi Architettura, sezione 9)
+- [x] Creare progetto Supabase (hosted)
+- [x] Caricare tutta la documentazione nella cartella `docs/`
+- [x] Scrivere il `README.md` iniziale del progetto
+- [ ] ~~Installare e configurare Supabase CLI in locale~~ — spostato in Fase 1, serve per le migrazioni
+- [ ] Rimuovere il prototipo Expo e inizializzare il progetto Angular
+- [ ] Rendere l'app una PWA (`ng add @angular/pwa`)
+- [ ] Connettere l'app Angular a Supabase
+- [ ] Pubblicare la PWA su un hosting statico HTTPS e testarla su iPhone (Safari + installazione sulla home)
+
+**Superate dall'ADR 0001** (prototipo React Native + Expo, aprile 2026): inizializzazione del progetto Expo, connessione Expo–Supabase, test con Expo Go su iPhone (mai completato: bloccato dalla rete aziendale).
 
 ### Deliverable
-App vuota con schermata di benvenuto che gira su iPhone (tramite Expo Go) e browser. Repository GitHub pubblico con documentazione completa.
+App vuota con schermata di benvenuto, installabile come PWA sulla home dell'iPhone. Repository GitHub pubblico con documentazione completa.
 
 ### Cosa impari
-Come funziona un progetto React Native, cosa fa Expo, come si struttura un monorepo, come si usa Git in modo professionale.
+Come si configura una PWA (manifest, service worker, cache), come si pubblica un'app statica su HTTPS, come si usa Git in modo professionale.
 
-> **Nota iOS:** per i test quotidiani si usa Expo Go su iPhone (App Store, gratuito). Per generare la build finale da pubblicare sull'App Store si usa EAS Build — un servizio cloud di Expo che compila su server Mac remoti, senza bisogno di un Mac fisico. Il tier gratuito è sufficiente per uso personale.
+> **Nota iOS:** nessuna pubblicazione sull'App Store e nessun Mac necessario. Su iPhone la PWA si installa da Safari con "Aggiungi alla schermata Home". Le notifiche push funzionano solo con la PWA installata (iOS 16.4+).
 
 ---
 
@@ -47,6 +53,7 @@ Come funziona un progetto React Native, cosa fa Expo, come si struttura un monor
 **Tecnologie introdotte:** Supabase Auth, PostgreSQL (prime tabelle), Row Level Security
 
 ### Attività
+- [ ] Installare e configurare Supabase CLI in locale (spostato da Fase 0)
 - [ ] Creare le tabelle `USER` e `FAMILY` nel database
 - [ ] Implementare registrazione e login con email/password tramite Supabase Auth
 - [ ] Implementare la creazione di un nucleo familiare
@@ -59,7 +66,7 @@ Come funziona un progetto React Native, cosa fa Expo, come si struttura un monor
 Alfy funziona con autenticazione reale. Si può creare una famiglia, generare un codice invito e usarlo da un secondo dispositivo per unirsi.
 
 ### Cosa impari
-Come funziona l'autenticazione JWT, cosa sono le policy RLS in PostgreSQL, come si gestisce lo stato di autenticazione in React Native.
+Come funziona l'autenticazione JWT, cosa sono le policy RLS in PostgreSQL, come si gestisce lo stato di autenticazione in Angular.
 
 ---
 
@@ -130,7 +137,7 @@ Come si gestiscono date e timezone in un'app, cosa sono gli eventi ricorrenti e 
 ## Fase 5 — Liste e Task
 **Obiettivo:** Alfy gestisce liste della spesa, to-do e deleghe familiari.
 **Durata stimata:** 1-2 settimane
-**Tecnologie introdotte:** Realtime di Supabase (aggiornamenti live tra dispositivi)
+**Tecnologie introdotte:** Realtime di Supabase (aggiornamenti live tra dispositivi), Web Push (service worker)
 
 ### Attività
 - [ ] Creare le tabelle `LIST` e `TASK`
@@ -143,7 +150,7 @@ Come si gestiscono date e timezone in un'app, cosa sono gli eventi ricorrenti e 
 La lista della spesa è condivisa e aggiornata in tempo reale tra i dispositivi della famiglia. Alfy assegna task e notifica il membro interessato.
 
 ### Cosa impari
-Come funziona il realtime con WebSocket, come si inviano notifiche push con Expo, come si gestiscono i permessi di notifica su iOS e Android.
+Come funziona il realtime con WebSocket, come si inviano notifiche Web Push (service worker, chiavi VAPID), come si gestiscono i permessi di notifica nel browser e sulla PWA installata su iPhone.
 
 ---
 
@@ -171,7 +178,7 @@ Cosa sono i cron job e come si pianificano task ricorrenti, come si gestisce la 
 ## Fase 7 — Documenti, Casa e Salute
 **Obiettivo:** Alfy archivia documenti, gestisce manutenzioni e tiene il registro sanitario della famiglia.
 **Durata stimata:** 3 settimane
-**Tecnologie introdotte:** Supabase Storage (upload file), gestione immagini in React Native
+**Tecnologie introdotte:** Supabase Storage (upload file), acquisizione di foto e file dal browser
 
 ### Attività
 - [ ] Creare le tabelle `DOCUMENT`, `MAINTENANCE`, `HEALTH_RECORD`, `MEDICATION`
@@ -185,7 +192,7 @@ Cosa sono i cron job e come si pianificano task ricorrenti, come si gestisce la 
 Alfy archivia e trova documenti, ricorda le manutenzioni in scadenza e gestisce il registro sanitario familiare. Tutto accessibile via conversazione.
 
 ### Cosa impari
-Come si gestisce l'upload di file in un'app mobile, come funziona lo storage cloud, come si implementa la ricerca testuale in PostgreSQL.
+Come si gestisce l'upload di file in una PWA, come funziona lo storage cloud, come si implementa la ricerca testuale in PostgreSQL.
 
 ---
 

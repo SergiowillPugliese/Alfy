@@ -106,6 +106,7 @@ Integrazione con sistemi di domotica (Home Assistant, Google Home, protocollo Ma
 
 - Sviluppo da parte di un singolo sviluppatore
 - Nessun Mac disponibile per build iOS nativa tradizionale
+- Distribuzione come PWA, nessuna pubblicazione sugli store ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md))
 - Budget limitato per servizi cloud (preferenza per tier gratuiti o open source self-hostable)
 - Obiettivo portfolio: il codice deve essere leggibile e la documentazione completa
 
@@ -118,7 +119,7 @@ Integrazione con sistemi di domotica (Home Assistant, Google Home, protocollo Ma
 | Claude API (Anthropic) | AI conversazionale e tool use | Core del prodotto |
 | Google Calendar API | Opzionale | Integrazione agenda |
 | Home Assistant / Google Home | Opzionale | Solo F11 |
-| Servizio di notifiche push | Da definire | Necessario per F7 |
+| Servizio di notifiche push | Web Push (standard del browser) | Necessario per F7. Su iPhone richiede la PWA installata sulla home (iOS 16.4+) |
 
 ---
 

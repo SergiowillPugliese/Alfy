@@ -2,6 +2,7 @@
 
 **Versione:** 0.1 (Draft)
 **Data:** Marzo 2026
+**Ultimo aggiornamento:** 2026-10-14 — frontend Angular PWA al posto di React Native + Expo ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md)); struttura flat, non monorepo
 **Autore:** Sergio
 **Stato:** In revisione
 
@@ -23,13 +24,13 @@ Le scelte tecnologiche di Alfy sono guidate da questi criteri, in ordine di prio
 
 | Layer | Tecnologia | Motivazione |
 |-------|-----------|-------------|
-| **Frontend mobile/web** | React Native + Expo | Unico codebase per iOS, Android e Web. Build iOS senza Mac tramite EAS Cloud. Ecosistema maturo, ottima integrazione con Supabase e TypeScript. |
+| **Frontend** | Angular (PWA) | Distribuito come PWA installabile, nessuna pubblicazione sugli store ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md)). Supporto PWA integrato (`@angular/pwa`), terreno noto dello sviluppatore, TypeScript nativo. Client Supabase: `@supabase/supabase-js`. |
 | **Database** | Supabase (PostgreSQL) | Database relazionale managed, coerente con l'ERD progettato. Tier gratuito generoso. Open source e self-hostabile in futuro se necessario. |
 | **Autenticazione** | Supabase Auth | Incluso in Supabase. Supporta email/password e OAuth (Google). Nessun servizio esterno aggiuntivo. |
 | **Storage file** | Supabase Storage | Incluso in Supabase. Gestisce upload di documenti, ricevute e foto. Tier gratuito: 1GB. |
 | **Backend logic** | Supabase Edge Functions | Funzioni serverless in TypeScript per logica complessa (es. orchestrazione AI, notifiche pianificate). Nessun server da gestire. |
 | **AI conversazionale** | Claude API (Anthropic) | Motore conversazionale con tool use per attivare le funzionalità di Alfy. Modello: claude-haiku (veloce, economico per uso quotidiano) con fallback a claude-sonnet per richieste complesse. |
-| **Notifiche push** | Expo Notifications | Incluso nell'ecosistema Expo. Funziona su iOS e Android senza servizi esterni. |
+| **Notifiche push** | Web Push (service worker) | Standard del browser, nessun servizio a pagamento. Su iPhone richiede la PWA installata sulla home (iOS 16.4+). Dettagli da definire prima della Fase 5. |
 | **Linguaggio** | TypeScript | Usato su tutto lo stack. Riduce gli errori, migliora la leggibilità del codice per il portfolio. |
 
 ---
@@ -40,12 +41,11 @@ Le scelte tecnologiche di Alfy sono guidate da questi criteri, in ordine di prio
 ┌─────────────────────────────────────────────────────────┐
 │                        CLIENT                           │
 │                                                         │
-│   ┌─────────────────┐       ┌─────────────────┐        │
-│   │   App Mobile    │       │   App Web       │        │
-│   │ (iOS / Android) │       │   (Browser)     │        │
-│   └────────┬────────┘       └────────┬────────┘        │
-│            └──────────┬─────────────┘                  │
-│                       │ React Native + Expo             │
+│   ┌─────────────────────────────────────────────┐       │
+│   │      PWA Angular (browser / home screen)    │       │
+│   │        telefono · tablet · desktop          │       │
+│   └───────────────────┬─────────────────────────┘       │
+│                       │ Angular + service worker        │
 └───────────────────────┼─────────────────────────────────┘
                         │
                         ▼
@@ -66,8 +66,8 @@ Le scelte tecnologiche di Alfy sono guidate da questi criteri, in ordine di prio
 │   │  └─────────────┘     └──────────────────────┘  │   │
 │   │                                                 │   │
 │   │  ┌─────────────┐     ┌──────────────────────┐  │   │
-│   │  │ Notif.      │────▶│   Expo Push           │  │   │
-│   │  │ Scheduler   │     │   Notifications       │  │   │
+│   │  │ Notif.      │────▶│   Web Push            │  │   │
+│   │  │ Scheduler   │     │   (service worker)    │  │   │
 │   │  └─────────────┘     └──────────────────────┘  │   │
 │   └─────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────┘
@@ -171,25 +171,23 @@ Essendo l'AI il componente a costo variabile, è importante gestirlo con attenzi
 
 ---
 
-## 7. Struttura del Progetto (Monorepo)
+## 7. Struttura del Progetto
+
+Struttura flat: l'app sta nella root del repository. Il monorepo previsto nella v0.1 è stato scartato in Fase 0 (motivazione nella sezione 9). Struttura target dopo la migrazione ad Angular ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md)):
 
 ```
 alfy/
-├── apps/
-│   └── mobile/          # React Native + Expo (iOS, Android, Web)
-├── packages/
-│   └── types/           # Tipi TypeScript condivisi
-├── supabase/
+├── src/
+│   └── app/             # Componenti, servizi e routing Angular
+├── public/              # Manifest, icone PWA e asset statici
+├── ngsw-config.json     # Configurazione del service worker (cache, offline)
+├── supabase/            # Da Fase 1 — generata da `supabase init`
 │   ├── migrations/      # Migrazioni del database
-│   ├── functions/       # Edge Functions
+│   ├── functions/       # Edge Functions (da Fase 2)
 │   │   ├── ai-handler/  # Orchestrazione Claude API
 │   │   └── scheduler/   # Notifiche proattive pianificate
 │   └── seed.sql         # Dati di esempio per sviluppo
-├── docs/                # Documentazione del progetto
-│   ├── PRD.md
-│   ├── user-stories.md
-│   ├── ERD.md
-│   └── architecture.md  # Questo documento
+├── docs/                # Documentazione del progetto (indice: docs/index.md)
 └── README.md
 ```
 
@@ -201,8 +199,9 @@ alfy/
 |-----------|-----|
 | **Cursor** | IDE AI-assisted per lo sviluppo |
 | **Supabase CLI** | Gestione locale del database e delle funzioni |
-| **Expo Go** | Test rapido su dispositivo fisico Android durante lo sviluppo |
-| **EAS Build** | Build cloud per iOS (senza Mac) |
+| **Angular CLI** | Generazione del progetto, dev server e build |
+| **Safari su iPhone** | Test della PWA sul dispositivo fisico, inclusa l'installazione sulla home |
+| **Hosting statico HTTPS** | Pubblicazione della PWA (servizio da scegliere; il service worker richiede HTTPS) |
 | **GitHub** | Version control e portfolio |
 | **GitHub Actions** | CI/CD per deploy automatico |
 
@@ -212,11 +211,13 @@ alfy/
 
 | Alternativa | Motivo della non scelta |
 |-------------|------------------------|
-| **Flutter** | Richiede apprendimento di Dart, vantaggio non sufficiente rispetto a React Native per questo progetto |
+| **React Native + Expo** | Adottato in Fase 0, sostituito il 2026-10-14 ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md)): senza pubblicazione sugli store il vantaggio delle app native viene meno, e il supporto PWA è meno maturo di quello di Angular. |
+| **Flutter** | Richiede apprendimento di Dart; con target PWA non porta vantaggi rispetto ad Angular. |
 | **Firebase** | Database NoSQL non adatto alla struttura relazionale dell'ERD. Costi imprevedibili. Closed source. |
 | **Backend custom (Node/NestJS)** | Aggiunge complessità infrastrutturale non necessaria per un singolo sviluppatore. Supabase Edge Functions coprono i casi d'uso richiesti. |
-| **Next.js** | Ottimo per web-first, ma penalizza l'esperienza mobile rispetto a React Native. |
+| **Next.js** | Valido per una PWA, ma introduce un framework nuovo senza vantaggi rispetto ad Angular, che è il terreno noto dello sviluppatore. |
 | **Self-hosting** | Complessità eccessiva per la fase attuale del progetto. Supabase è self-hostabile in futuro se necessario. |
+| **Monorepo (`apps/` + `packages/`)** | Previsto nella v0.1, scartato in Fase 0 (2026-04-25): con una sola app e un solo sviluppatore aggiunge configurazione (workspaces, dipendenze tra pacchetti) senza benefici concreti. Da rivalutare se nasce una seconda app o se app ed Edge Functions devono condividere tipi (Fase 2). |
 
 ---
 
