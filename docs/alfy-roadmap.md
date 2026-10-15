@@ -2,7 +2,7 @@
 
 **Versione:** 0.1 (Draft)
 **Data:** Marzo 2026
-**Ultimo aggiornamento:** 2026-10-14 — Fase 0 riaperta: frontend Angular PWA al posto di React Native + Expo ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md))
+**Ultimo aggiornamento:** 2026-10-15 — progetto Angular inizializzato. Fase 0 riaperta il 2026-10-14: frontend Angular PWA al posto di React Native + Expo ([ADR 0001](./adr/0001-angular-pwa-invece-di-react-native.md))
 **Autore:** Sergio
 **Stato:** In revisione
 
@@ -30,7 +30,7 @@
 - [x] Caricare tutta la documentazione nella cartella `docs/`
 - [x] Scrivere il `README.md` iniziale del progetto
 - [ ] ~~Installare e configurare Supabase CLI in locale~~ — spostato in Fase 1, serve per le migrazioni
-- [ ] Rimuovere il prototipo Expo e inizializzare il progetto Angular
+- [x] Rimuovere il prototipo Expo e inizializzare il progetto Angular
 - [ ] Rendere l'app una PWA (`ng add @angular/pwa`)
 - [ ] Connettere l'app Angular a Supabase
 - [ ] Pubblicare la PWA su un hosting statico HTTPS e testarla su iPhone (Safari + installazione sulla home)

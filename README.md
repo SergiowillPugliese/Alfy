@@ -39,7 +39,7 @@ Alfy interpreta la richiesta, esegue l'azione sul database tramite **tool use** 
 
 ## Prerequisiti
 
-> **Migrazione in corso** ([ADR 0001](./docs/adr/0001-angular-pwa-invece-di-react-native.md)): il codice attuale è il prototipo React Native + Expo della Fase 0, in sostituzione con Angular. Prerequisiti, setup e struttura qui sotto descrivono ancora il prototipo e verranno aggiornati a migrazione completata.
+> **Migrazione in corso** ([ADR 0001](./docs/adr/0001-angular-pwa-invece-di-react-native.md)): il prototipo React Native + Expo è stato rimosso e il codice attuale è lo scaffold Angular generato da `ng new`. Prerequisiti, setup e struttura qui sotto descrivono ancora il prototipo e verranno aggiornati a migrazione completata.
 
 - [Node.js](https://nodejs.org/) v20.19.4+ (minimo richiesto da React Native 0.81)
 - [Expo Go](https://expo.dev/go) installato sul dispositivo mobile (per test su telefono)
